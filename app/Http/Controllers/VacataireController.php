@@ -301,19 +301,26 @@ class VacataireController extends Controller
         );
     }
 
-    public function recherche(Request $request)
-    {
-        $vacataire = Vacataire::where('email',$request->email)->where('cin',$request->cin)>first();
-        if (!$vacataire) {
-            return back()->with('error','Informations incorrectes');
-        }
+   public function recherche(Request $request)
+{
+    $vacataire = Vacataire::where('email', $request->email)
+        ->where('cin', $request->cin)
+        ->first();
 
-        session([
-            'vacataire_id' => $vacataire->id
-        ]);
-        return redirect("/suivi-dossier/{$vacataire->id}");
-    }
 
+if (!$vacataire) {
+    return Inertia::render('Vacataires/EspaceVacataire', [
+        'error' => 'Email ou CIN incorrect.'
+    ]);
+}
+
+
+    session([
+        'vacataire_id' => $vacataire->id
+    ]);
+
+    return redirect("/suivi-dossier/{$vacataire->id}");
+}
     public function superadminIndex()
     {
         $vacataires = Vacataire::latest()->get();

@@ -1,11 +1,13 @@
 
 import React, { useState } from "react";
 import { router, Link } from "@inertiajs/react";
+import { usePage } from '@inertiajs/react';
 
-export default function EspaceVacataire({ vacataire = null }) {
+export default function EspaceVacataire({ vacataire = null, error = null }) {
     const [email, setEmail] = useState("");
     const [cin, setCin] = useState("");
-
+    const { props } = usePage();
+    const errors = props.errors || {};
     const rechercherDossier = (e) => {
         e.preventDefault();
         router.post("/espace-vacataire/recherche", {
@@ -38,7 +40,12 @@ export default function EspaceVacataire({ vacataire = null }) {
 
                                     </p>
                                 </div>
-
+                                {error && (
+    <div className="alert alert-danger mb-4">
+        <i className="bi bi-exclamation-triangle-fill me-2"></i>
+        {error}
+    </div>
+)}
                                 <form onSubmit={rechercherDossier}>
                                     <div className="mb-3">
                                         <label className="form-label small fw-semibold text-secondary">
@@ -77,6 +84,7 @@ export default function EspaceVacataire({ vacataire = null }) {
                                             />
                                         </div>
                                     </div>
+
 
                                     <div className="d-flex flex-column gap-3">
                                         <button
